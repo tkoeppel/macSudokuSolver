@@ -2,9 +2,9 @@
 let sudoku;
 
 // Messages
-const init_msg = "Please fill in your macSudokuSolver ...";
+const init_msg = "Please fill in your sudoku ...";
 const conflict_msg = "Please resolve the highlighted conflicts!";
-const failed_msg = "The macSudokuSolver you have entered is unsolvable!";
+const failed_msg = "The sudoku you have entered is unsolvable!";
 const success_msg = "Success!";
 
 // (internal) macSudokuSolver field operations
