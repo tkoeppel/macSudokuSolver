@@ -1,0 +1,18 @@
+.s-field {
+    font-size: large;
+    columns: 1;
+    width: 40px;
+    caret-color: transparent !important;
+}
+.s-field:hover{
+    cursor: pointer;
+}
+
+.quadrant {
+    width: 134px;
+    height: 130px;
+}
+
+#sudoku-solver{
+    width: 420px;
+}
