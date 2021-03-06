@@ -1,12 +1,15 @@
 // board initialization
 function initializeSudokuBoard() {
     let sudoku_field = "";
+    // quadrant rows
     for (let qr = 1; qr <= 3; qr++) {
         let sudoku_row = `<div class="row">`;
+        // quadrant cols
         for (let qc = 1; qc <= 3; qc++) {
             let quadrant = `
                 <div class="quadrant border border-2 border-secondary rounded">`;
-
+            
+            // sudoku fields in quadrants
             for (let r = (qr - 1) * 3; r < qr * 3; r++) {
                 let quadrant_row = `<div class="row">`;
                 for (let c = (qc - 1) * 3; c < qc * 3; c++) {
@@ -24,7 +27,7 @@ function initializeSudokuBoard() {
         }
         sudoku_field += sudoku_row + `</div>`;
     }
-    document.getElementById('macSudokuSolver-field').innerHTML = sudoku_field;
+    document.getElementById('sudoku-field').innerHTML = sudoku_field;
 }
 
 // display inner macSudokuSolver for user
