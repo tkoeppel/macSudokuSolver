@@ -1,0 +1,6 @@
+key.pem
+cert.pem
+
+/node_modules
+/dist
+/log/*
