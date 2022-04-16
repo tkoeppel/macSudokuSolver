@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "lib": [
+      "dom",
+      "es2020"
+    ],
+    "noResolve": false,
+    "noEmit": false,
+    "sourceMap": true,
+    "preserveConstEnums":true,
+    "declaration": false,
+    "emitDeclarationOnly": false,
+    "listEmittedFiles": true,
+    "watch": true,
+    //"rootDir": "src",
+    "outDir": "dist"
+  }
+}
