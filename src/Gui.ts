@@ -3,6 +3,13 @@ import {Conflict} from "./Conflict";
 import {Sudoku} from "./Sudoku";
 
 export class Gui {
+	get photo_btn(): HTMLInputElement {
+		return this._photo_btn;
+	}
+
+	set photo_btn(value: HTMLInputElement) {
+		this._photo_btn = value;
+	}
 	get message(): HTMLDivElement {
 		return this._message;
 	}
@@ -60,6 +67,7 @@ export class Gui {
 	private _message: HTMLDivElement;
 	private _solve_btn: HTMLButtonElement;
 	private _reset_btn: HTMLButtonElement;
+	private _photo_btn: HTMLInputElement;
 	private _example_btn: HTMLButtonElement;
 
 	public init_msg: string = "Please fill in your sudoku ...";
@@ -78,11 +86,14 @@ export class Gui {
 			this.message = document.getElementById('msg') as HTMLDivElement;
 			this.solve_btn = document.getElementById('solve-btn') as HTMLButtonElement;
 			this.reset_btn = document.getElementById('reset-btn') as HTMLButtonElement;
+			this.photo_btn = document.getElementById('img-capture') as HTMLInputElement;
 			this.example_btn = document.getElementById('example-btn') as HTMLButtonElement;
 
 			// Event listener
 			this.solve_btn.addEventListener('click', () => this.app.solveSudoku(this.app.sudoku));
 			this.reset_btn.addEventListener('click', () => this.app.resetSudokus());
+			this.photo_btn.addEventListener('click', () => Gui.getPermissions());
+			this.photo_btn.addEventListener('change', (e) => this.app.getPhoto(e));
 			this.example_btn.addEventListener('click', () => this.app.establishExample());
 
 			// Init
@@ -90,6 +101,7 @@ export class Gui {
 			this.s_fields = Array.from(document.getElementsByClassName('s-field')) as Array<HTMLInputElement>;
 			await this.app.sudoku.resetBoard();
 			await this.establishNumberInputListener(this.s_fields);
+
 		});
 	}
 
@@ -228,5 +240,13 @@ export class Gui {
 		this.message.innerHTML = this.success_msg;
 		this.message.className = "";
 		this.message.classList.add('alert', 'alert-success');
+	}
+
+	private static async getPermissions(): Promise<void> {
+		if (!('mediaDevices' in navigator) && !('getUserMedia' in navigator.mediaDevices)) {
+			console.log("Let's get this party started")
+		} else {
+			await navigator.mediaDevices.getUserMedia({video: true})
+		}
 	}
 }

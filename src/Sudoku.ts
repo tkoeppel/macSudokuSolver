@@ -20,7 +20,6 @@ export class Sudoku {
 
 	private _app: App;
 	private _board: Array<Array<number | Array<number>>>;
-	private _conflicts: Array<Conflict>;
 
 	constructor(app: App) {
 		this.app = app;

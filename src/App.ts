@@ -2,7 +2,7 @@ import {Sudoku} from './Sudoku';
 import {Gui} from './Gui';
 import {AI} from "./AI";
 import {UnsolvableSudokuError} from "./UnsolvableSudokuError";
-import {cloneDeep} from 'lodash';
+import {cloneDeep, entries} from 'lodash';
 
 export class App {
 	get ai(): AI {
@@ -61,7 +61,7 @@ export class App {
 		this.sudoku.synchronizeSudoku();
 	}
 
-	public async solveSudoku(sudoku: Sudoku){
+	public async solveSudoku(sudoku: Sudoku): Promise<void>{
 		const input_sudoku = cloneDeep(sudoku);
 
 		try {
@@ -74,5 +74,23 @@ export class App {
 				this.gui.failedSudoku()
 			}
 		}
+	}
+
+	public async getPhoto(event: Event): Promise<void>{
+		const files = (event.target as HTMLInputElement).files;
+		const form_data = new FormData();
+		form_data.append('sudoku_photo', files[0]);
+
+		fetch('/saveImage', {
+			method: 'POST',
+			body: form_data
+		})
+			.then(response => response.json())
+			.then(data => {
+				console.log(data.path)
+			})
+			.catch(error => {
+				console.error(error)
+			})
 	}
 }
