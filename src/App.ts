@@ -2,7 +2,7 @@ import {Sudoku} from './Sudoku';
 import {Gui} from './Gui';
 import {AI} from "./AI";
 import {UnsolvableSudokuError} from "./UnsolvableSudokuError";
-import {cloneDeep, entries} from 'lodash';
+import {cloneDeep} from 'lodash';
 
 export class App {
 	get ai(): AI {
@@ -81,16 +81,27 @@ export class App {
 		const form_data = new FormData();
 		form_data.append('sudoku_photo', files[0]);
 
-		fetch('/saveImage', {
+		fetch('/nn', {
 			method: 'POST',
 			body: form_data
 		})
 			.then(response => response.json())
-			.then(data => {
-				console.log(data.path)
+			.then(result => {
+				this.establishSudokuFromPhoto(result.data.matrix)
 			})
 			.catch(error => {
 				console.error(error)
 			})
+	}
+
+	private establishSudokuFromPhoto(board: Array<Array<number>>){
+		this.resetSudokus();
+		const POSS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+		for(let i = 0; i < 9; i++){
+			for(let j = 0; j < 9; j++){
+				this.sudoku.board[i][j] = (board[i][j] === 0) ? POSS : board[i][j];
+			}
+		}
+		this.sudoku.synchronizeSudoku();
 	}
 }
