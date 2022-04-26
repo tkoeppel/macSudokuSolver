@@ -1,10 +1,18 @@
 import {Sudoku} from './Sudoku';
-import {Gui} from './Gui';
+import {GUI} from './GUI';
 import {AI} from "./AI";
 import {UnsolvableSudokuError} from "./UnsolvableSudokuError";
 import {cloneDeep} from 'lodash';
+import {NN} from "./NN";
 
 export class App {
+	get nn(): NN {
+		return this._nn;
+	}
+
+	set nn(value: NN) {
+		this._nn = value;
+	}
 	get ai(): AI {
 		return this._ai;
 	}
@@ -12,11 +20,11 @@ export class App {
 	set ai(value: AI) {
 		this._ai = value;
 	}
-	get gui(): Gui {
+	get gui(): GUI {
 		return this._gui;
 	}
 
-	set gui(value: Gui) {
+	set gui(value: GUI) {
 		this._gui = value;
 	}
 
@@ -29,13 +37,15 @@ export class App {
 	}
 
 	private _sudoku: Sudoku;
-	private _gui: Gui;
+	private _gui: GUI;
 	private _ai: AI;
+	private _nn: NN;
 
 	constructor() {
 		this.sudoku = new Sudoku(this);
-		this.gui = new Gui(this);
+		this.gui = new GUI(this);
 		this.ai = new AI();
+		this.nn = new NN(640, 480);
 	}
 
 	public resetSudokus() {
@@ -76,24 +86,6 @@ export class App {
 		}
 	}
 
-	public async getPhoto(event: Event): Promise<void>{
-		const files = (event.target as HTMLInputElement).files;
-		const form_data = new FormData();
-		form_data.append('sudoku_photo', files[0]);
-
-		fetch('/nn', {
-			method: 'POST',
-			body: form_data
-		})
-			.then(response => response.json())
-			.then(result => {
-				this.establishSudokuFromPhoto(result.data.matrix)
-			})
-			.catch(error => {
-				console.error(error)
-			})
-	}
-
 	private establishSudokuFromPhoto(board: Array<Array<number>>){
 		this.resetSudokus();
 		const POSS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -103,5 +95,23 @@ export class App {
 			}
 		}
 		this.sudoku.synchronizeSudoku();
+	}
+
+	public sendPhoto(dom_url: string): void{
+		const form_data = new FormData();
+		form_data.append('sudoku_photo', dom_url);
+
+		fetch('/nn', {
+			method: 'POST',
+			body: form_data
+		})
+			.then(response => response.json())
+			.then(result => {
+				console.log(result)
+				this.establishSudokuFromPhoto(result.data.matrix)
+			})
+			.catch(error => {
+				console.error(error)
+			})
 	}
 }

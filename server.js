@@ -3,6 +3,7 @@ const https = require('https');
 const fs = require('fs');
 const fileupload = require('express-fileupload')
 const logger = require('./logger.js');
+const ip = require('ip')
 
 // parameter
 const PORT = 8000;
@@ -15,7 +16,7 @@ let app = express();
 
 // server creation
 https.createServer(options, app).listen(PORT, () => {
-    logger.info(`Start of server on localhost:${PORT} ...`);
+    logger.info(`Start of server on ${ip.address()}:${PORT} ...`);
 });
 app.use(express.static(PUBLIC_PATH));
 app.use(fileupload({
@@ -24,16 +25,18 @@ app.use(fileupload({
 
 // File handling
 app.post('/nn', async (req, res) => {
-    logger.info(`Receiving file '${{...req.files.sudoku_photo}.name}'`);
+    logger.info(`Receiving base64 image from ${req.socket.remoteAddress}`);
     try {
-        if (!req.files) {
-            logger.warning(`No file uploaded!`)
+        if (!req.body.sudoku_photo) {
+            logger.warning(`Uploading of file '${photo.name}' has failed`)
             res.send({
                 status: false,
                 message: 'No file uploaded'
             });
         } else {
-            let photo = req.files.sudoku_photo;
+            const buffer = Buffer.from(req.body.sudoku_photo, "base64");
+            fs.writeFileSync("./uploads/image.png", buffer);
+
             // TODO nn stuff
             const dummy = [
                 [0, 0, 3, 0, 2, 0, 6, 0, 0],
@@ -50,15 +53,11 @@ app.post('/nn', async (req, res) => {
             //send response
             res.send({
                 status: true,
-                message: 'File is uploaded',
+                message: 'Image successfully converted to sudoku',
                 data: {
-                    name: photo.name,
-                    mimetype: photo.mimetype,
-                    size: photo.size,
                     matrix: dummy,
                 }
             });
-            logger.info(`Uploaded file '${photo.name}' successfully`);
         }
     } catch (err) {
         res.status(500).send(err);

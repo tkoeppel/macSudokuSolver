@@ -1,9 +1,19 @@
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+}
+
 .s-field {
     font-size: large;
     columns: 1;
     width: 40px;
     caret-color: transparent !important;
 }
+
 .s-field:hover{
     cursor: pointer;
 }
@@ -16,3 +26,27 @@
 #sudoku-solver{
     width: 420px;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+#mask{
+    top:0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.75);
+    position: absolute;
+    z-index: 100;
+}
+
+#video-stream {
+    padding: 0;
+}
+
